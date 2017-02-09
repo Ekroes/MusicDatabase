@@ -1,0 +1,5 @@
+src/login.properties
+bin/
+.project
+.classpath
+.settings/
