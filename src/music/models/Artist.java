@@ -13,6 +13,12 @@ public class Artist {
 	public Artist(String name) {
 		this.name = name;
 	}
+	
+	public Artist (String name, String start, String end){
+		this.name = name;
+		this.start = start;
+		this.end = end;
+	}
 
 	public Artist(Integer id, String name, String start, String end) {
 
@@ -50,9 +56,9 @@ public class Artist {
 		this.end = end;
 	}
 
-	public String toString() {
+	/*public String toString() {
 
 		return name + " " + start + " - " + end + "\n";
 				
-	}
+	}*/
 }

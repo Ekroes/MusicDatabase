@@ -16,6 +16,21 @@ public class Album {
 
 	}
 
+	public Album(String name, String releaseDate, Integer artistId) {
+
+		this.name = name;
+		this.releaseDate = releaseDate;
+		this.artistId = artistId;
+	}
+
+	public Album(Integer albumId, String name, String releaseDate) {
+
+		this.albumId = albumId;
+		this.name = name;
+		this.releaseDate = releaseDate;
+
+	}
+
 	public Album(Integer albumId, String name, String releaseDate, Integer artistId) {
 
 		this.albumId = albumId;
@@ -48,8 +63,8 @@ public class Album {
 	public Integer getArtistId() {
 		return artistId;
 	}
-	
-	public String toString(){
-		return name + " " + releaseDate + "\n";
-	}
+
+	/*
+	 * public String toString(){ return name + " " + releaseDate + "\n"; }
+	 */
 }
