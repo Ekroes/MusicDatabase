@@ -31,6 +31,8 @@ public class MusicUI {
 		out.println("5) Add Artist");
 		out.println("6) Modify Artist information");
 		out.println("7) Delete an Artist from Database");
+		out.println("8) Add Album");
+		out.println("9) Modify Album");
 		out.println("0) Quit\n");
 		out.print("? ");
 	}
@@ -66,6 +68,12 @@ public class MusicUI {
 			break;
 		case 7: // Delete an artist
 			deleteArtist();
+			break;
+		case 8: // 
+			addAlbum();
+			break;
+		case 9: // modify Album
+			updateAlbum();
 		}
 		return true;
 	}
@@ -131,15 +139,18 @@ public class MusicUI {
 	public void addArtist() throws SQLException {
 		MusicDAO artistDAO = new MusicDAO();
 		out.println("Type the Name of the Artist you wish to add.\n");
-		out.println("> ");
+		out.print("> ");
 		String artistName = keyboard.nextLine();
 		out.println("Type the year the artist officialy began performing. \n");
-		out.println("> ");
+		out.print("> ");
 		String yearStart = keyboard.nextLine();
 		out.println("Type the year the artist ended their career under the name above."
-				+ " If they are still active type null. \n");
-		out.println("> ");
+				+ " If they are still active hit enter. \n");
+		out.print("> ");
 		String yearEnd = keyboard.nextLine();
+		if ( yearEnd == ""){
+			yearEnd = null;
+		}
 		Artist addedArtist = new Artist(artistName, yearStart, yearEnd);
 		boolean isDuplicate = artistDAO.checkArtistName(artistName);
 		if (isDuplicate) {
@@ -184,6 +195,9 @@ public class MusicUI {
 		out.print("> ");
 
 		String endYear = keyboard.nextLine();
+		if (endYear == ""){
+			endYear = null;
+		}
 		Artist updatedArtist = new Artist(id, artistName, startYear, endYear);
 		dao.saveArtist(updatedArtist);
 

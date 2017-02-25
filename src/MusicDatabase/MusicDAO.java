@@ -206,7 +206,14 @@ public class MusicDAO {
 			pstmt.setInt(4, modifiedArtist.getId());
 			pstmt.setString(1, modifiedArtist.getName());
 			pstmt.setString(2, modifiedArtist.getStart());
-			pstmt.setString(3, modifiedArtist.getEnd());
+			if (modifiedArtist.getEnd() == null || "".equals(modifiedArtist.getEnd())) {
+				pstmt.setNull(3, java.sql.Types.INTEGER);
+			} else {
+				pstmt.setString(3, modifiedArtist.getEnd());
+
+			}
+
+			
 			pstmt.executeUpdate();
 
 		} finally {
@@ -215,7 +222,7 @@ public class MusicDAO {
 		}
 	}
 
-	public int insertArtist(Artist a) throws SQLException {
+	public int insertArtist(Artist addedArtistInfo) throws SQLException {
 
 		String sql = "INSERT INTO artist (Artist_Name, Start_Year_Active, End_Year_Active) VALUES (?,?,?)";
 
@@ -227,9 +234,15 @@ public class MusicDAO {
 		try {
 			conn = driver.openConnection();
 			pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			pstmt.setString(1, a.getName());
-			pstmt.setString(2, a.getStart());
-			pstmt.setString(3, a.getEnd());
+			pstmt.setString(1, addedArtistInfo.getName());
+			pstmt.setString(2, addedArtistInfo.getStart());
+
+			if (addedArtistInfo.getEnd() == null || "".equals(addedArtistInfo.getEnd())) {
+				pstmt.setNull(3, java.sql.Types.INTEGER);
+			} else {
+				pstmt.setString(3, addedArtistInfo.getEnd());
+
+			}
 			pstmt.executeUpdate();
 			res = pstmt.getGeneratedKeys();
 
