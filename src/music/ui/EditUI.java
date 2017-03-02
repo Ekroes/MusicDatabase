@@ -17,7 +17,7 @@ public class EditUI {
 
 	public void editMainMenu() throws SQLException {
 
-		System.out.println("Welcome to As the Crow Flies Music Database.");
+		System.out.println("Welcome to the Edit Screen.");
 		boolean keepRunning = true;
 		while (keepRunning) {
 			printEditMainMenu();
@@ -33,7 +33,7 @@ public class EditUI {
 		out.println("3) Delete an existing Artist");
 		out.println("4) Add a new Album");
 		out.println("5) Modify an existing Album's information");
-		out.println("6) Delete an existing Album");
+		out.println("6) Delete all existing Albums attributed to an Artist");
 		out.println("0) Quit\n");
 		out.print("? ");
 	}
@@ -65,7 +65,7 @@ public class EditUI {
 			updateAlbum();
 			break;
 		// case 6:
-		// deleteAlbum();
+		// deleteAllAlbums();
 
 		}
 		return true;
@@ -162,10 +162,10 @@ public class EditUI {
 
 		out.println("Type the name of the album you wish to add.");
 		out.print("> ");
-		String albumName = keyboard.nextLine();
+		String albumName = keyboard.nextLine().trim();
 		out.println("Type the year the album was released.");
 		out.print("> ");
-		String yearReleased = keyboard.nextLine();
+		String yearReleased = keyboard.nextLine().trim();
 		out.println("Type the ID number of the artist who produced the album");
 		out.print("> ");
 		Integer artistId = keyboard.nextInt();
@@ -196,5 +196,33 @@ public class EditUI {
 		String yearReleased = keyboard.nextLine();
 		Album modifiedAlbum = new Album(albumId, albumName, yearReleased);
 		edao.saveAlbum(modifiedAlbum);
+	}
+	
+	public void deleteAllAlbums() throws SQLException {
+		
+		out.println("The purpose of this selection is to remove all albums for a particular artist.");
+		out.println("This will require the artist's id number.  Do you wish to proceed?");
+		out.println("Type y to continue.");
+		out.print("> ");
+		String input = keyboard.nextLine().trim();
+		if (input.equalsIgnoreCase("y")){
+			out.println("What is the id of the artist?");
+			out.print("> ");
+		Integer artistId = readUserChoice();
+		
+		Artist a = mdao.getArtistId(artistId);
+		if(a == null){
+			out.println("there is no artist with id = " + artistId + "Returning to main menu.");
+			return;
+		}
+		else{
+			edao.deleteAllAlbums(artistId);
+		}
+		
+		}
+		else{
+			out.println("Returning to edit menu");
+			return;
+		}
 	}
 }

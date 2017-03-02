@@ -27,10 +27,11 @@ public class MusicUI {
 
 	public void printMainMenu() {
 		out.println("1) List Artists in the Database");
-		out.println("2) Search for only the Artist");
-		out.println("3) Search by Artist for their Albums");
-		out.println("4) Search by Album for the Artist");
-		out.println("5) Edit");
+		out.println("2) List Albums in the Database");
+		out.println("3) Search for only the Artist");
+		out.println("4) Search by Artist for their Albums");
+		out.println("5) Search by Album for the Artist");
+		out.println("6) Edit");
 		out.println("0) Quit\n");
 		out.print("? ");
 	}
@@ -49,16 +50,19 @@ public class MusicUI {
 		case 1: // list all artist
 			listAllArtists();
 			break;
-		case 2: // Search for Artist only
+		case 2: // list all albums
+			listAllAlbums();
+			break;
+		case 3: // Search for Artist only
 			searchOnlyArtist();
 			break;
-		case 3: // Search Artist for Album
+		case 4: // Search Artist for Album
 			searchArtistForAlbums();
 			break;
-		case 4: // Search by Album for the Artist who produced it
+		case 5: // Search by Album for the Artist who produced it
 			searchByAlbumForArtist();
 			break;
-		case 5: // Add an artist
+		case 6: // Add an artist
 			signIn();
 			break;
 
@@ -74,6 +78,13 @@ public class MusicUI {
 
 		}
 
+	}
+	public void listAllAlbums() throws SQLException{
+		
+		List<Album> result = dao.listAlbumAndIDs();
+		for (Album myAlbums : result){
+			out.println(myAlbums.getAlbumId() + " " + myAlbums.getName() + " " + myAlbums.getArtistId());
+		}
 	}
 
 	public void searchOnlyArtist() throws SQLException {

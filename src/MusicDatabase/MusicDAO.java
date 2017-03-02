@@ -265,4 +265,28 @@ public class MusicDAO {
 		}
 	}
 
-}
+	public List<Album> listAlbumAndIDs() throws SQLException{
+		List<Album> album = new ArrayList<Album>();
+		Driver driver = new Driver();
+		String sql = "SELECT * FROM album " + "ORDER BY Artist_ID AND Year_Released";
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet res = null;
+		try {
+			conn = driver.openConnection();
+			pstmt = conn.prepareStatement(sql);
+			res = pstmt.executeQuery();
+			while (res.next()) {
+				album.add(new Album(res.getInt("Album_ID"), res.getString("Album_Name"),
+						res.getString("Year_Released"), res.getInt("Artist_ID")));
+			}
+			return album;
+		} finally {
+			Driver.closeConnection(conn);
+			Driver.closeStatement(pstmt);
+		}
+	}
+	}
+
+

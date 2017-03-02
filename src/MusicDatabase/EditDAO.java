@@ -162,5 +162,24 @@ public class EditDAO {
 		}
 
 	}
+	
+	public void deleteAllAlbums(Integer id) throws SQLException{
+		
+		String sql = "DELETE * FROM  album WHERE Artist_Id = ?";
+		Driver driver = new Driver();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = driver.openConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			pstmt.executeUpdate();
+
+		} finally {
+			Driver.closeConnection(conn);
+			Driver.closeStatement(pstmt);
+		}
+		
+	}
 
 }
