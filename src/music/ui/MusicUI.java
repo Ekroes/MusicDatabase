@@ -5,11 +5,13 @@ import java.util.*;
 import java.sql.*;
 import MusicDatabase.MusicDAO;
 import music.models.*;
+import music.ui.EditUI;
 
 public class MusicUI {
 
 	Scanner keyboard = new Scanner(System.in);
 	MusicDAO dao = new MusicDAO();
+	EditUI eUI = new EditUI();
 
 	public void mainMenu() throws SQLException {
 
@@ -28,11 +30,7 @@ public class MusicUI {
 		out.println("2) Search for only the Artist");
 		out.println("3) Search by Artist for their Albums");
 		out.println("4) Search by Album for the Artist");
-		out.println("5) Add Artist");
-		out.println("6) Modify Artist information");
-		out.println("7) Delete an Artist from Database");
-		out.println("8) Add Album");
-		out.println("9) Modify Album");
+		out.println("5) Edit");
 		out.println("0) Quit\n");
 		out.print("? ");
 	}
@@ -61,19 +59,9 @@ public class MusicUI {
 			searchByAlbumForArtist();
 			break;
 		case 5: // Add an artist
-			addArtist();
+			signIn();
 			break;
-		case 6: // Modify Artist information
-			updateArtist();
-			break;
-		case 7: // Delete an artist
-			deleteArtist();
-			break;
-		case 8: // 
-			addAlbum();
-			break;
-		case 9: // modify Album
-			updateAlbum();
+
 		}
 		return true;
 	}
@@ -136,131 +124,24 @@ public class MusicUI {
 		}
 	}
 
-	public void addArtist() throws SQLException {
-		MusicDAO artistDAO = new MusicDAO();
-		out.println("Type the Name of the Artist you wish to add.\n");
-		out.print("> ");
-		String artistName = keyboard.nextLine();
-		out.println("Type the year the artist officialy began performing. \n");
-		out.print("> ");
-		String yearStart = keyboard.nextLine();
-		out.println("Type the year the artist ended their career under the name above."
-				+ " If they are still active hit enter. \n");
-		out.print("> ");
-		String yearEnd = keyboard.nextLine();
-		if ( yearEnd == ""){
-			yearEnd = null;
+	public void signIn() throws SQLException {
+
+		MusicDAO signInDAO = new MusicDAO();
+		out.println("You must have an account before you can edit the database");
+		out.print("Please enter user name:  ");
+		String userName = keyboard.nextLine();
+		out.println("Please enter password:  ");
+		String password = keyboard.nextLine();
+
+		dao.loginAttempt(userName, password);
+		// User loginAttempt = new User(userName, password);
+		boolean isSuccessful = signInDAO.loginAttempt(userName, password);
+		if (isSuccessful) {
+			eUI.editMainMenu();
 		}
-		Artist addedArtist = new Artist(artistName, yearStart, yearEnd);
-		boolean isDuplicate = artistDAO.checkArtistName(artistName);
-		if (isDuplicate) {
-			out.println("Artist already exists in database.");
-		}
-
-		else {
-
-			dao.saveArtist(addedArtist);
-			out.println("Artist saved as #" + addedArtist.getId() + ".\n");
-		}
-
-	}
-
-	public void updateArtist() throws SQLException {
-		out.println("Please type the database id of the Artist you want to modify.");
-		out.println("This information is available via the list artist function.");
-		out.println("the id is? >");
-		Integer id = readUserChoice();
-
-		Artist enteredId = dao.getArtistId(id);
-		if (enteredId == null) {
-			out.println("There is no Artist with id = " + id + ". Returning to the main menu.");
-			return;
-		}
-		out.println("Here is the existing info about the Artist.");
-		out.println(enteredId);
-		out.println("Modifying an artist's information requires their name, the year they became active," + "\n"
-				+ "and the year they concluded working if applicable.");
-		out.println("Please enter the Artist's name");
-		out.print("> ");
-
-		String artistName = keyboard.nextLine();
-
-		out.println("Enter the year they became active.");
-		out.print("> ");
-
-		String startYear = keyboard.nextLine();
-
-		out.println("Enter the year they ended their career under the name entered above. "
-				+ " If they are still active, enter null.");
-		out.print("> ");
-
-		String endYear = keyboard.nextLine();
-		if (endYear == ""){
-			endYear = null;
-		}
-		Artist updatedArtist = new Artist(id, artistName, startYear, endYear);
-		dao.saveArtist(updatedArtist);
-
-		out.println("updated info added to the database");
-	}
-
-	public void deleteArtist() throws SQLException {
-
-		out.println("Please type the database id for the artist you wish to delete.");
-		out.println("The id is available via the list artist function.");
-		out.println(
-				"Please note deletion cannot take place without first removing the Artist's works from the database");
-		out.println("The id is? ");
-		Integer id = readUserChoice();
-
-		Artist a = dao.getArtistId(id);
-		if (a == null) {
-			out.println("There was no Artist with id = " + id + "Returning to the main menu.");
-			return;
-		} else {
-			dao.searchAlbumByArtistId(id);
-
-		}
-	}
-
-	public void addAlbum() throws SQLException {
-
-		out.println("Type the name of the album you wish to add.");
-		out.print("> ");
-		String albumName = keyboard.nextLine();
-		out.println("Type the year the album was released.");
-		out.print("> ");
-		String yearReleased = keyboard.nextLine();
-		out.println("Type the ID number of the artist who produced the album");
-		out.print("> ");
-		Integer artistId = keyboard.nextInt();
-		Album addedAlbum = new Album(albumName, yearReleased, artistId);
-		dao.saveAlbum(addedAlbum);
-		out.println("Album saved as #" + addedAlbum.getAlbumId() + ".\n");
-
-	}
-
-	public void updateAlbum() throws SQLException {
-
-		out.println("Updating requires the id of the album.  ");
-		out.println("This is available by searching for the artist's various albums.");
-		out.print("id = ?");
-		Integer albumId = readUserChoice();
-
-		Album enteredId = dao.getAlbumId(albumId);
-		if (enteredId == null) {
-			out.println("There is no Artist with id = " + enteredId + ". Returning to the main menu.");
-			return;
-		}
-		out.println("Modifying an Album requires the name of the album and the year it was released.");
-		out.println(" What is the name of the album?");
-		out.print("> ");
-		String albumName = keyboard.nextLine();
-		out.println("What year was the album released?");
-		out.print("> ");
-		String yearReleased = keyboard.nextLine();
-		Album modifiedAlbum = new Album(albumId, albumName, yearReleased);
-		dao.saveAlbum(modifiedAlbum);
+		// else{
+		// dao.trackAttempts(loginInfo)
+		// }
 	}
 
 }

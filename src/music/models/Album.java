@@ -43,6 +43,11 @@ public class Album {
 		return albumId;
 	}
 
+
+	public void setAlbumId(Integer albumId) {
+		this.albumId = albumId;
+	}
+
 	public String getName() {
 		return name;
 	}
